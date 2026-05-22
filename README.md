@@ -1,15 +1,15 @@
 # RegistrationTelegram
 
-A simple Telegram bot built with Pyrogram and Pyromod that asks new users for their name, age, and contact number, then stores the data in MongoDB and sends a notification to an admin.
+A simple Telegram bot built with Pyrogram and Pyromod that asks new users for their name, age, and phone number, stores the data in MongoDB, and notifies an admin chat.
 
 ## Features
 
 - Handles `/start` command
 - Asks users for their name and age
-- Validates age input is numeric and between 1 and 99
+- Validates that age is numeric and between 1 and 99
 - Requests the user's phone number using a contact button
 - Stores new users in MongoDB to prevent duplicate registration
-- Sends a summary of each new user to the admin chat
+- Sends a summary of each new user to an admin chat
 
 ## Requirements
 
@@ -25,6 +25,13 @@ APP_BOT_TOKEN=your_bot_token
 APP_API_ID=your_api_id
 APP_API_HASH=your_api_hash
 CLUSTER_ID=your_mongodb_connection_string
+```
+
+Optional environment variables loaded by `config.py` but not required by the current bot flow:
+
+```env
+DROPLINK_API_KEY=
+MY_CHANNEL_ID=
 ```
 
 ## Installation
@@ -58,13 +65,14 @@ uv run reloadium run main.py
 
 ## Project Structure
 
-- `main.py` — bot command flow and user interaction logic
-- `client.py` — Pyrogram client initialization
+- `main.py` — entry point for running the bot
+- `client.py` — Pyrogram client initialization and plugin configuration
 - `config.py` — loads environment variables via `dotenv`
-- `database/users.py` — MongoDB user storage and existence checks
+- `plugins/start.py` — handles `/start`, user prompts, validation, and admin notifications
+- `database/register_bot.py` — MongoDB connection, user insertion, and duplicate-checking logic
 
 ## Notes
 
-- The bot currently sends collected user data to the hard-coded `ADMIN` ID inside `main.py`.
-- Duplicate registrations are prevented by checking the MongoDB `users` collection.
-- `CLUSTER_ID` should be a valid MongoDB connection URI for the `telebot` database.
+- The admin notification chat ID is hard-coded in `plugins/start.py` as `ADMIN`.
+- Duplicate registration is prevented by checking the MongoDB `users` collection for the user ID.
+- `CLUSTER_ID` should be a valid MongoDB connection URI for the `register_bot` database.

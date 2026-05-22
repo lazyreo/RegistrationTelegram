@@ -3,8 +3,8 @@ from pymongo import MongoClient
 from config import CLUSTER_ID
 
 cluster = MongoClient(CLUSTER_ID)
-telebot_db = cluster["telebot"]
-users_collection = telebot_db["users"]
+register_bot_db = cluster["register_bot"]
+users_collection = register_bot_db["users"]
 users_collection.create_index("id")
 
 
